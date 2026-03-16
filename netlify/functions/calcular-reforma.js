@@ -1,174 +1,106 @@
-// Netlify Function para cálculo y envío de emails
-exports.handler = async (event, context) => {
-    // Solo permitir POST
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            body: JSON.stringify({ error: 'Método no permitido' })
-        };
-    }
+exports.handler = async (event) => {
 
-    try {
-        const data = JSON.parse(event.body);
-        
-        // Cálculo del presupuesto
-        let presupuesto = 1000;
+if(event.httpMethod !== "POST"){
+return{
+statusCode:405,
+body:"Method not allowed"
+}
+}
 
-        const m2 = parseInt(data.m2) || 0;
-        const habitaciones = parseInt(data.habitaciones) || 0;
-        const banos = parseInt(data.banos) || 0;
-        const reformaIntegral = data.reforma_integral === true || data.reforma_integral === 'on';
+const data = JSON.parse(event.body)
 
-        presupuesto += 75 * m2;
-        presupuesto += 4200 * habitaciones;
-        presupuesto += 7400 * banos;
+let presupuesto = 1000
 
-        if (reformaIntegral) {
-            presupuesto *= 1.2;
-        }
+const m2 = parseInt(data.m2)||0
+const habitaciones = parseInt(data.habitaciones)||0
+const banos = parseInt(data.banos)||0
 
-        // Cambios distribución
-        if (data.cambios_distribucion) presupuesto += 6692;
+presupuesto += 75*m2
+presupuesto += 4200*habitaciones
+presupuesto += 7400*banos
 
-        // Cocina
-        if (data.reforma_cocina) {
-            presupuesto += 12000;
-            if (data.recupera_cocina) {
-                presupuesto -= 12000 * 0.15;
-            }
-        }
+if(data.reforma_integral) presupuesto *=1.2
 
-        // Baños
-        if (data.reforma_banos_integral) {
-            const costoBanosExtra = 100 * banos;
-            presupuesto += costoBanosExtra;
-            if (data.recupera_banos) {
-                presupuesto -= (banos * 7400 + costoBanosExtra) * 0.15;
-            }
-        }
+if(data.cambios_distribucion) presupuesto+=6692
 
-        // Fontanería
-        if (data.renovacion_fontaneria) presupuesto += 6500;
+if(data.reforma_cocina){
 
-        // Calefacción
-        if (data.cambiar_caldera === 'si') {
-            presupuesto += 2890;
-        }
+presupuesto+=12000
 
-        // Electricidad
-        if (data.renovacion_electricidad) presupuesto += 4527;
+if(data.recupera_cocina)
+presupuesto-=12000*0.15
 
-        // Aire acondicionado
-        if (data.aire_acondicionado) presupuesto += 1500;
+}
 
-        // Carpintería exterior
-        if (data.cambios_carpinteria_exterior === 'si') {
-            const numElementosExterior = parseInt(data.cambios_carpinteria_exterior_cuantos) || 0;
-            presupuesto += numElementosExterior * 2750;
-        }
+if(data.reforma_banos_integral){
 
-        // Carpintería interior
-        if (data.cambios_carpinteria_interior === 'si') {
-            const numElementosInterior = parseInt(data.cambios_carpinteria_interior_cuantos) || 0;
-            presupuesto += numElementosInterior * 875;
-        }
+presupuesto+=100*banos
 
-        // Solados
-        if (data.cambios_suelo === 'si') {
-            if (data.tipo_solado === 'tarima') {
-                presupuesto += m2 * 57;
-            } else if (data.tipo_solado === 'ceramico') {
-                presupuesto += m2 * 75;
-            }
-        }
+if(data.recupera_banos)
+presupuesto-=banos*7400*0.15
 
-        // Techos
-        if (data.cambios_techo) presupuesto += 1500;
-        if (data.falso_techo) presupuesto += 500;
+}
 
-        // Verificar fecha disponible
-        const fechasDisponibles = ['2026-02-10', '2026-02-15', '2026-02-20'];
-        const fechaInicioObra = data.fecha_inicio_obra || '';
-        const citaAgendada = fechasDisponibles.includes(fechaInicioObra)
-            ? `Cita agendada para ${fechaInicioObra}`
-            : 'Fecha no disponible';
+if(data.renovacion_fontaneria) presupuesto+=6500
 
-        // Formatear presupuesto
-        const presupuestoFormateado = new Intl.NumberFormat('es-ES', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(presupuesto);
+if(data.cambiar_caldera==="si") presupuesto+=2890
 
-        // Enviar emails (usando Netlify Email o servicio externo)
-        // Opción 1: Usar fetch a un servicio como SendGrid, Mailgun, etc.
-        // Opción 2: Usar Netlify Forms con notificaciones
-        
-        // Ejemplo con SendGrid (necesitas configurar SENDGRID_API_KEY en Netlify)
-        if (process.env.SENDGRID_API_KEY && data.email) {
-            await enviarEmail(data, presupuestoFormateado, citaAgendada);
-        }
+if(data.renovacion_electricidad) presupuesto+=4527
 
-        return {
-            statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                success: true,
-                presupuesto: presupuestoFormateado,
-                cita: citaAgendada,
-                data: data
-            })
-        };
+if(data.aire_acondicionado) presupuesto+=1500
 
-    } catch (error) {
-        console.error('Error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ 
-                success: false, 
-                error: 'Error al procesar la solicitud' 
-            })
-        };
-    }
-};
+if(data.cambios_carpinteria_exterior==="si"){
 
-// Función auxiliar para enviar emails (ejemplo con SendGrid)
-async function enviarEmail(data, presupuesto, cita) {
-    const sgMail = require('@sendgrid/mail');
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+presupuesto+=
+(parseInt(data.cambios_carpinteria_exterior_cuantos)||0)*2750
 
-    const mensaje = `
-        Nueva Solicitud de Reforma
-        
-        Presupuesto aproximado: ${presupuesto} €
-        ${cita}
-        
-        Datos del cliente:
-        - Nombre: ${data.nombre}
-        - Email: ${data.email}
-        - Teléfono: ${data.telefono}
-        - Dirección: ${data.direccion}
-        - m²: ${data.m2}
-        - Habitaciones: ${data.habitaciones}
-        - Baños: ${data.banos}
-    `;
+}
 
-    // Email al administrador
-    await sgMail.send({
-        to: process.env.ADMIN_EMAIL || 'admin@tudominio.com',
-        from: 'noreply@tudominio.com',
-        subject: 'Nueva Solicitud de Reforma',
-        text: mensaje
-    });
+if(data.cambios_carpinteria_interior==="si"){
 
-    // Email al cliente
-    if (data.email) {
-        await sgMail.send({
-            to: data.email,
-            from: 'noreply@tudominio.com',
-            subject: 'Tu presupuesto de reforma',
-            text: mensaje
-        });
-    }
+presupuesto+=
+(parseInt(data.cambios_carpinteria_interior_cuantos)||0)*875
+
+}
+
+if(data.cambios_suelo==="si"){
+
+if(data.tipo_solado==="tarima")
+presupuesto+=m2*57
+
+if(data.tipo_solado==="ceramico")
+presupuesto+=m2*75
+
+}
+
+if(data.cambios_techo) presupuesto+=1500
+
+if(data.falso_techo) presupuesto+=500
+
+const fechas=["2026-02-10","2026-02-15","2026-02-20"]
+
+const cita=fechas.includes(data.fecha_inicio_obra)
+?`Cita disponible ${data.fecha_inicio_obra}`
+:"Fecha no disponible"
+
+return{
+
+statusCode:200,
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+success:true,
+
+presupuesto:new Intl.NumberFormat("es-ES").format(presupuesto),
+
+cita
+
+})
+
+}
+
 }

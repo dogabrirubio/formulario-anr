@@ -1,9 +1,3 @@
 [build]
-  functions = "netlify/functions"
 
-[functions]
-  node_bundler = "esbuild"
-
-# Si usas SendGrid, añade las variables en el dashboard de Netlify:
-# SENDGRID_API_KEY
-# ADMIN_EMAIL
+functions="netlify/functions"

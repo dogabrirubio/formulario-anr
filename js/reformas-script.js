@@ -42,37 +42,33 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(this);
         const data = {};
 
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
+        formData.forEach((value, key) => data[key] = value);
 
-        this.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            data[cb.name] = cb.checked;
-        });
-
-        this.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-            data[radio.name] = radio.value;
-        });
+        this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
+        this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
         const resultadoDiv = document.getElementById('resultado');
         resultadoDiv.style.display = 'block';
-        resultadoDiv.innerHTML = '<p>Enviando datos...</p>';
+        resultadoDiv.innerHTML = '<p>Enviando...</p>';
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbx2dZlZVtRkWtGTg3NYMlwnHEuy8QssI1A06B9KRqJGZY5e-q_ildA_FODtYA-2moSS/exec', {
+            const url = 'https://script.google.com/macros/s/AKfycbwRpWMNY3NJpJhDzhuiRfIR1CpLxdmiWH7pVoGbADRxuli_xqr2necKKLsFUsoyHACi/exec';  // ← Pega aquí tu URL actual si es diferente
+
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
+            console.log("Status:", response.status);
             const text = await response.text();
-            console.log("=== RESPUESTA RAW DEL SERVIDOR ===", text);
+            console.log("Respuesta RAW completa:", text);
 
             let result;
             try {
                 result = JSON.parse(text);
             } catch (e) {
-                result = { success: false, error: "El servidor no devolvió JSON válido: " + text };
+                result = { success: false, error: "No es JSON válido: " + text };
             }
 
             if (result.success) {
@@ -87,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error de conexión. Abre la consola (F12) y dime qué ves.</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error de conexión. Mira la consola (F12) y copia todo lo que aparece.</p>`;
         }
     });
 });

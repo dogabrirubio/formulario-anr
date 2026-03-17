@@ -1,14 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar Flatpickr en ambos campos
+    flatpickr("#fecha", {});
+    flatpickr("#calendario-inicio", {});
 
-    // Inicializar Flatpickr para fecha general y fecha inicio obra
-    flatpickr("#fecha-general", { dateFormat: "Y-m-d" });
-
-    flatpickr("#calendario-inicio", {
-        enable: ["2026-02-10", "2026-02-15", "2026-02-20"],
-        dateFormat: "Y-m-d"
-    });
-
-    // Toggle plano
+    // Toggle: Plano
     document.getElementById('plano_si').addEventListener('change', () => {
         document.getElementById('upload_plano').style.display = 'block';
         document.getElementById('estancias_texto').style.display = 'none';
@@ -18,31 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('estancias_texto').style.display = 'block';
     });
 
-    // Toggle calefacción
-    document.getElementById('calef_si').addEventListener('change', () => {
-        document.getElementById('detalle_calefaccion').style.display = 'block';
-    });
-    document.getElementById('calef_no').addEventListener('change', () => {
-        document.getElementById('detalle_calefaccion').style.display = 'none';
-    });
-
-    // Toggle carpintería exterior
-    document.getElementById('carp_ext_si').addEventListener('change', () => {
-        document.getElementById('detalle_carp_exterior').style.display = 'block';
-    });
-    document.getElementById('carp_ext_no').addEventListener('change', () => {
-        document.getElementById('detalle_carp_exterior').style.display = 'none';
-    });
-
-    // Toggle carpintería interior + rodapié
-    document.getElementById('carp_int_si').addEventListener('change', () => {
-        document.getElementById('detalle_carp_interior').style.display = 'block';
-    });
-    document.getElementById('carp_int_no').addEventListener('change', () => {
-        document.getElementById('detalle_carp_interior').style.display = 'none';
-    });
-
-    // Toggle suelo
+    // Toggle: Suelos
     document.getElementById('suelo_si').addEventListener('change', () => {
         document.getElementById('detalle_suelo').style.display = 'block';
     });
@@ -50,17 +21,42 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('detalle_suelo').style.display = 'none';
     });
 
+    // Toggle: Calefacción
+    document.getElementById('calef_si').addEventListener('change', () => {
+        document.getElementById('detalle_calefaccion').style.display = 'block';
+    });
+    document.getElementById('calef_no').addEventListener('change', () => {
+        document.getElementById('detalle_calefaccion').style.display = 'none';
+    });
+
+    // Toggle: Carpintería exterior
+    document.getElementById('carp_ext_si').addEventListener('change', () => {
+        document.getElementById('detalle_carp_exterior').style.display = 'block';
+    });
+    document.getElementById('carp_ext_no').addEventListener('change', () => {
+        document.getElementById('detalle_carp_exterior').style.display = 'none';
+    });
+
+    // Toggle: Carpintería interior + Rodapié
+    document.getElementById('carp_int_si').addEventListener('change', () => {
+        document.getElementById('detalle_carp_interior').style.display = 'block';
+        document.getElementById('rodapie_div').style.display = 'block';
+    });
+    document.getElementById('carp_int_no').addEventListener('change', () => {
+        document.getElementById('detalle_carp_interior').style.display = 'none';
+        document.getElementById('rodapie_div').style.display = 'none';
+    });
+
     // Envío del formulario
     document.getElementById('form-reformas').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
         const formData = new FormData(this);
         const data = {};
         formData.forEach((value, key) => { data[key] = value; });
 
-        // Manejar checkboxes
-        this.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            data[cb.name] = cb.checked;
-        });
+        const checkboxes = this.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => { data[cb.name] = cb.checked; });
 
         try {
             const response = await fetch('/.netlify/functions/calcular-reforma', {
@@ -83,9 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error:', error);
             const resultadoDiv = document.getElementById('resultado');
-            resultadoDiv.innerHTML = '<p style="color:red;">Error al procesar la solicitud.</p>';
             resultadoDiv.style.display = 'block';
+            resultadoDiv.innerHTML = '<p style="color:red;">Error al procesar la solicitud.</p>';
         }
     });
-
 });

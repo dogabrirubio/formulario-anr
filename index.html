@@ -6,7 +6,7 @@
     <title>Calculador de Reformas</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="/css/reformas-style.css">
+    <link rel="stylesheet" href="css/reformas-style.css">
 </head>
 
 <body>
@@ -60,7 +60,7 @@
     <textarea name="estilo"></textarea><br>
     
     <label>¿Cuándo empezar la obra?</label>
-    <input type="date" name="fecha_inicio_obra" id="calendario-inicio" required><br>
+    <input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
 
     <label>¿Hay ascensor?</label>
     <input type="checkbox" name="ascensor"><br>
@@ -121,6 +121,7 @@
     <label>Tipo de A/C:</label>
     <input type="text" name="tipo_ac"><br>
 
+    <!-- Carpintería exterior -->
     <div style="margin-top:1.5em;">
         <label>¿Cambios carpintería exterior?</label><br>
         <input type="radio" name="cambios_carpinteria_exterior" value="no" id="carp_ext_no" checked> No<br>
@@ -132,7 +133,7 @@
         <input type="number" name="cambios_carpinteria_exterior_cuantos"><br>
     </div>
 
-    <!-- CARPINTERÍA INTERIOR -->
+    <!-- Carpintería interior -->
     <div style="margin-top:1.5em;">
         <label>¿Cambios carpintería interior?</label><br>
         <input type="radio" name="cambios_carpinteria_interior" value="no" id="carp_int_no" checked> No<br>
@@ -141,13 +142,16 @@
 
     <div id="detalle_carp_interior" style="display:none; margin-left:20px;">
         <label>¿Cuántos elementos hay que cambiar?</label><br>
-        <input type="number" name="cambios_carpinteria_interior_cuantos"><br><br>
+        <input type="number" name="cambios_carpinteria_interior_cuantos"><br>
+    </div>
 
+    <div id="detalle_rodapie" style="display:none; margin-left:20px;">
         <label>¿Instalar o cambiar rodapié?</label><br>
         <input type="radio" name="rodapie" value="no" checked> No<br>
         <input type="radio" name="rodapie" value="si"> Sí
     </div>
 
+    <!-- Suelo -->
     <div style="margin-top:1.5em;">
         <label>¿Vas a cambiar el suelo?</label><br>
         <input type="radio" name="cambios_suelo" value="no" id="suelo_no" checked> No<br>
@@ -172,7 +176,7 @@
 <div id="resultado"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="/js/reformas-script.js"></script>
+<script src="js/reformas-script.js"></script>
 
 </body>
 </html>

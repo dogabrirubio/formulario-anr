@@ -94,14 +94,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const resultadoDiv = document.getElementById('resultado');
         resultadoDiv.style.display = 'block';
-        resultadoDiv.innerHTML = '<p>Enviando a Google Sheets...</p>';
+        resultadoDiv.innerHTML = '<p>Enviando...</p>';
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            // Usamos método GET + query string para evitar CORS
+            const params = new URLSearchParams(data);
+            const response = await fetch('https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString());
 
             const text = await response.text();
             console.log("Respuesta raw:", text);
@@ -120,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12) y copia todo.</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
         }
     });
 });

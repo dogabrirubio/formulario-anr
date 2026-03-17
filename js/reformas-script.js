@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // -------- FLATPICKR --------
+    // -------- FLATPICKR (ARREGLADO) --------
     flatpickr("#calendario-inicio", {
-        enable: ["2026-02-10", "2026-02-15", "2026-02-20"],
         dateFormat: "Y-m-d"
     });
 
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!si || !no || !div) return;
 
-        // estado inicial (por si recarga)
         if (si.checked) {
             div.style.display = 'block';
         } else {
@@ -31,10 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // -------- TOGGLES --------
-
-    // 🔥 ESTE ES EL IMPORTANTE (rodapié depende de esto)
     toggleBlock("carp_int_si", "carp_int_no", "detalle_carp_interior");
-
     toggleBlock("carp_ext_si", "carp_ext_no", "detalle_carp_exterior");
     toggleBlock("suelo_si", "suelo_no", "detalle_suelo");
     toggleBlock("calef_si", "calef_no", "detalle_calefaccion");
@@ -64,12 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(this);
         const data = {};
 
-        // convertir a objeto
         formData.forEach((value, key) => {
             data[key] = value;
         });
 
-        // checkboxes
         const checkboxes = this.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(cb => {
             data[cb.name] = cb.checked;

@@ -1,182 +1,100 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculador de Reformas</title>
+document.addEventListener('DOMContentLoaded', function() {
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="css/reformas-style.css">
-</head>
+    flatpickr("#calendario-inicio", { dateFormat: "Y-m-d" });
 
-<body>
+    // Toggle genérico
+    function toggleBlock(siId, noId, divId) {
+        const si = document.getElementById(siId);
+        const no = document.getElementById(noId);
+        const div = document.getElementById(divId);
+        if (!si || !no || !div) return;
 
-<form id="form-reformas">
-    <h2>Formulario de Reformas</h2>
+        div.style.display = si.checked ? 'block' : 'none';
 
-    <label>Fecha:</label>
-    <input type="date" name="fecha" required><br>
-    
-    <label>Nombre:</label>
-    <input type="text" name="nombre" required><br>
-    
-    <label>Dirección:</label>
-    <textarea name="direccion" required></textarea><br>
-    
-    <label>Teléfono:</label>
-    <input type="tel" name="telefono" required><br>
-    
-    <label>Email:</label>
-    <input type="email" name="email" required><br>
-    
-    <label>Disponibilidad para visita:</label>
-    <textarea name="disponibilidad" required></textarea><br>
+        si.addEventListener('change', () => div.style.display = 'block');
+        no.addEventListener('change', () => div.style.display = 'none');
+    }
 
-    <label>¿Es una reforma integral?</label>
-    <input type="checkbox" name="reforma_integral"><br>
-    
-    <label>¿Cuántos m² aproximados?</label>
-    <input type="number" name="m2" required><br>
-    
-    <label>¿Nº habitaciones?</label>
-    <input type="number" name="habitaciones"><br>
-    
-    <label>¿Nº baños?</label>
-    <input type="number" name="banos"><br>
-    
-    <label>¿En qué consiste la obra?</label>
-    <textarea name="consiste_obra"></textarea><br>
-    
-    <label>¿Dispuesto a invertir >50.000€?</label>
-    <input type="checkbox" name="inversion_mayor"><br>
-    
-    <label>¿Buscando calidad o precio?</label>
-    <select name="calidad_precio">
-        <option value="calidad">Calidad</option>
-        <option value="precio">Precio</option>
-    </select><br>
-    
-    <label>¿Estilo en mente?</label>
-    <textarea name="estilo"></textarea><br>
-    
-    <label>¿Cuándo empezar la obra?</label>
-    <input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
+    toggleBlock("carp_ext_si","carp_ext_no","detalle_carp_exterior");
+    toggleBlock("suelo_si","suelo_no","detalle_suelo");
+    toggleBlock("calef_si","calef_no","detalle_calefaccion");
+    toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    <label>¿Hay ascensor?</label>
-    <input type="checkbox" name="ascensor"><br>
-    
-    <label>¿Dispone de plano?</label>
-    <input type="radio" name="plano" value="si" id="plano_si"> Sí
-    <input type="radio" name="plano" value="no" id="plano_no" checked> No<br>
-    
-    <div id="upload_plano" style="display:none;">
-        <label>Subir plano:</label>
-        <input type="file" name="plano_file">
-    </div>
-    
-    <div id="estancias_texto" style="display:none;">
-        <label>Enumerar estancias:</label>
-        <textarea name="estancias"></textarea>
-    </div>
+    // Plano
+    const planoSi = document.getElementById('plano_si');
+    const planoNo = document.getElementById('plano_no');
+    const uploadPlano = document.getElementById('upload_plano');
+    const estanciasTexto = document.getElementById('estancias_texto');
 
-    <label>¿Cambios de distribución?</label>
-    <input type="checkbox" name="cambios_distribucion"><br>
-    
-    <label>¿Reforma integral cocina?</label>
-    <input type="checkbox" name="reforma_cocina"><br>
-    
-    <label>¿Recupera algo en cocina?</label>
-    <input type="checkbox" name="recupera_cocina"><br>
-    
-    <label>¿Reforma integral baños?</label>
-    <input type="checkbox" name="reforma_banos_integral"><br>
-    
-    <label>¿Recupera algo en baños?</label>
-    <input type="checkbox" name="recupera_banos"><br>
-    
-    <label>¿Renovación fontanería?</label>
-    <input type="checkbox" name="renovacion_fontaneria"><br>
+    if(planoSi && planoNo){
+        planoSi.addEventListener('change', () => {
+            uploadPlano.style.display = 'block';
+            estanciasTexto.style.display = 'none';
+        });
 
-    <div style="margin-top:1.5em;">
-        <label>¿Renovación calefacción?</label><br>
-        <input type="radio" name="renovacion_calefaccion" value="no" id="calef_no" checked> No<br>
-        <input type="radio" name="renovacion_calefaccion" value="si" id="calef_si"> Sí
-    </div>
+        planoNo.addEventListener('change', () => {
+            uploadPlano.style.display = 'none';
+            estanciasTexto.style.display = 'block';
+        });
+    }
 
-    <div id="detalle_calefaccion" style="display:none; margin-left:20px;">
-        <label>¿Cambiar caldera?</label><br>
-        <input type="radio" name="cambiar_caldera" value="no" checked> No<br>
-        <input type="radio" name="cambiar_caldera" value="si"> Sí
-    </div>
+    // SUBMIT - Versión corregida y más robusta
+    document.getElementById('form-reformas').addEventListener('submit', async function(e){
+        e.preventDefault();
 
-    <label>¿Renovación electricidad?</label>
-    <input type="checkbox" name="renovacion_electricidad"><br>
-    
-    <label>¿Instalación comunitaria?</label>
-    <input type="checkbox" name="instalacion_comunitaria"><br>
-    
-    <label>¿Aire acondicionado?</label>
-    <input type="checkbox" name="aire_acondicionado"><br>
-    
-    <label>Tipo de A/C:</label>
-    <input type="text" name="tipo_ac"><br>
+        const formData = new FormData(this);
+        const data = {};
 
-    <!-- Carpintería exterior -->
-    <div style="margin-top:1.5em;">
-        <label>¿Cambios carpintería exterior?</label><br>
-        <input type="radio" name="cambios_carpinteria_exterior" value="no" id="carp_ext_no" checked> No<br>
-        <input type="radio" name="cambios_carpinteria_exterior" value="si" id="carp_ext_si"> Sí
-    </div>
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
 
-    <div id="detalle_carp_exterior" style="display:none; margin-left:20px;">
-        <label>¿Cuántos elementos hay que cambiar?</label><br>
-        <input type="number" name="cambios_carpinteria_exterior_cuantos"><br>
-    </div>
+        // Checkboxes
+        this.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            data[cb.name] = cb.checked;
+        });
 
-    <!-- Carpintería interior -->
-    <div style="margin-top:1.5em;">
-        <label>¿Cambios carpintería interior?</label><br>
-        <input type="radio" name="cambios_carpinteria_interior" value="no" id="carp_int_no" checked> No<br>
-        <input type="radio" name="cambios_carpinteria_interior" value="si" id="carp_int_si"> Sí
-    </div>
+        // Radios (tomamos solo el valor seleccionado)
+        this.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+            data[radio.name] = radio.value;
+        });
 
-    <div id="detalle_carp_interior" style="display:none; margin-left:20px;">
-        <label>¿Cuántos elementos hay que cambiar?</label><br>
-        <input type="number" name="cambios_carpinteria_interior_cuantos"><br>
-    </div>
+        try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwRpWMNY3NJpJhDzhuiRfIR1CpLxdmiWH7pVoGbADRxuli_xqr2necKKLsFUsoyHACi/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
 
-    <div id="detalle_rodapie" style="display:none; margin-left:20px;">
-        <label>¿Instalar o cambiar rodapié?</label><br>
-        <input type="radio" name="rodapie" value="no" checked> No<br>
-        <input type="radio" name="rodapie" value="si"> Sí
-    </div>
+            const text = await response.text();
+            console.log("Respuesta raw del Google Script:", text);
 
-    <!-- Suelo -->
-    <div style="margin-top:1.5em;">
-        <label>¿Vas a cambiar el suelo?</label><br>
-        <input type="radio" name="cambios_suelo" value="no" id="suelo_no" checked> No<br>
-        <input type="radio" name="cambios_suelo" value="si" id="suelo_si"> Sí
-    </div>
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                result = { success: false, error: "Respuesta inválida del servidor: " + text };
+            }
 
-    <div id="detalle_suelo" style="display:none; margin-left:20px;">
-        <label>Tipo de suelo:</label><br>
-        <input type="radio" name="tipo_solado" value="tarima"> Tarima<br>
-        <input type="radio" name="tipo_solado" value="ceramico"> Cerámico
-    </div>
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.style.display = 'block';
 
-    <label>¿Cambios techo?</label>
-    <input type="checkbox" name="cambios_techo"><br>
-    
-    <label>¿Falso techo?</label>
-    <input type="checkbox" name="falso_techo"><br>
+            if (result.success) {
+                resultadoDiv.innerHTML = `
+                    <h3>¡Formulario enviado correctamente!</h3>
+                    <p><strong>Presupuesto aproximado:</strong> ${result.presupuesto || 'N/A'} €</p>
+                    <p><strong>Cita:</strong> ${result.cita || 'No especificada'}</p>
+                `;
+            } else {
+                resultadoDiv.innerHTML = `<p style="color:red;">Error: ${result.error || 'Error desconocido'}</p>`;
+            }
 
-    <button type="submit">Enviar</button>
-</form>
+        } catch (error) {
+            console.error("Error en fetch:", error);
+            document.getElementById('resultado').innerHTML = 
+                '<p style="color:red;">Error de conexión con el servidor. Revisa la consola.</p>';
+            document.getElementById('resultado').style.display = 'block';
+        }
+    });
 
-<div id="resultado"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="js/reformas-script.js"></script>
-
-</body>
-</html>
+});

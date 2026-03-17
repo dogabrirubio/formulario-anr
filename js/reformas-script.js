@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(cb=>data[cb.name]=cb.checked);
 
         try{
-            const webAppUrl = "https://dogabrirubio.github.io/formulario-anr/";
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbxewbqbI-T_CRsPdi5RErGh-QIRbJNydGPqoWVabcpb-lR7jPYtQ8KekhvlEc5Le6WE/exec";
 
             const response = await fetch(webAppUrl, {
                 method: 'POST',

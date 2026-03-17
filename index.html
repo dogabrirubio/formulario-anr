@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculador de Reformas</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="/css/reformas-style.css">
 </head>
+
 <body>
 
 <form id="form-reformas">
     <h2>Formulario de Reformas</h2>
 
     <label>Fecha:</label>
-    <input type="date" name="fecha" id="fecha-general" required><br>
+    <input type="date" name="fecha" id="fecha" required><br>
     
     <label>Nombre:</label>
     <input type="text" name="nombre" required><br>
@@ -141,9 +143,11 @@
         <label>¿Cuántos elementos hay que cambiar?</label><br>
         <input type="number" name="cambios_carpinteria_interior_cuantos"><br><br>
 
-        <label>¿Instalar o cambiar rodapié?</label><br>
-        <input type="radio" name="rodapie" value="no" checked> No<br>
-        <input type="radio" name="rodapie" value="si"> Sí
+        <div id="rodapie_div" style="display:none;">
+            <label>¿Instalar o cambiar rodapié?</label><br>
+            <input type="radio" name="rodapie" value="no" checked> No<br>
+            <input type="radio" name="rodapie" value="si"> Sí
+        </div>
     </div>
 
     <div style="margin-top:1.5em;">
@@ -167,7 +171,7 @@
     <button type="submit">Enviar</button>
 </form>
 
-<div id="resultado" style="display:none;"></div>
+<div id="resultado"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="/js/reformas-script.js"></script>

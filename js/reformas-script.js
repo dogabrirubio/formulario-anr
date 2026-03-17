@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
-        // Cálculo del presupuesto
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -97,10 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
         resultadoDiv.innerHTML = '<p>Enviando...</p>';
 
         try {
-            // Usamos método GET + query string para evitar CORS
             const params = new URLSearchParams(data);
-            const response = await fetch('https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString());
+            const url = 'https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString();
 
+            const response = await fetch(url);
             const text = await response.text();
             console.log("Respuesta raw:", text);
 
@@ -118,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Mira la consola (F12).</p>`;
         }
     });
 });

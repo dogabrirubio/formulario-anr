@@ -15,7 +15,7 @@
     <h2>Formulario de Reformas</h2>
 
     <label>Fecha:</label>
-    <input type="date" name="fecha" id="fecha" required><br>
+    <input type="date" name="fecha" required><br>
     
     <label>Nombre:</label>
     <input type="text" name="nombre" required><br>
@@ -60,7 +60,7 @@
     <textarea name="estilo"></textarea><br>
     
     <label>¿Cuándo empezar la obra?</label>
-    <input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
+    <input type="date" name="fecha_inicio_obra" id="calendario-inicio" required><br>
 
     <label>¿Hay ascensor?</label>
     <input type="checkbox" name="ascensor"><br>
@@ -143,11 +143,9 @@
         <label>¿Cuántos elementos hay que cambiar?</label><br>
         <input type="number" name="cambios_carpinteria_interior_cuantos"><br><br>
 
-        <div id="rodapie_div" style="display:none;">
-            <label>¿Instalar o cambiar rodapié?</label><br>
-            <input type="radio" name="rodapie" value="no" checked> No<br>
-            <input type="radio" name="rodapie" value="si"> Sí
-        </div>
+        <label>¿Instalar o cambiar rodapié?</label><br>
+        <input type="radio" name="rodapie" value="no" checked> No<br>
+        <input type="radio" name="rodapie" value="si"> Sí
     </div>
 
     <div style="margin-top:1.5em;">

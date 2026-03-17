@@ -1,81 +1,110 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
 
-flatpickr("#calendario-inicio", {
-enable: ["2026-02-10","2026-02-15","2026-02-20"],
-dateFormat: "Y-m-d"
+    // -------- FLATPICKR --------
+    flatpickr("#calendario-inicio", {
+        enable: ["2026-02-10", "2026-02-15", "2026-02-20"],
+        dateFormat: "Y-m-d"
+    });
+
+    // -------- FUNCION TOGGLE GENERICA --------
+    function toggleBlock(siId, noId, divId) {
+        const si = document.getElementById(siId);
+        const no = document.getElementById(noId);
+        const div = document.getElementById(divId);
+
+        if (!si || !no || !div) return;
+
+        // estado inicial (por si recarga)
+        if (si.checked) {
+            div.style.display = 'block';
+        } else {
+            div.style.display = 'none';
+        }
+
+        si.addEventListener('change', () => {
+            if (si.checked) div.style.display = 'block';
+        });
+
+        no.addEventListener('change', () => {
+            if (no.checked) div.style.display = 'none';
+        });
+    }
+
+    // -------- TOGGLES --------
+
+    // 🔥 ESTE ES EL IMPORTANTE (rodapié depende de esto)
+    toggleBlock("carp_int_si", "carp_int_no", "detalle_carp_interior");
+
+    toggleBlock("carp_ext_si", "carp_ext_no", "detalle_carp_exterior");
+    toggleBlock("suelo_si", "suelo_no", "detalle_suelo");
+    toggleBlock("calef_si", "calef_no", "detalle_calefaccion");
+
+    // -------- PLANO --------
+    const planoSi = document.getElementById('plano_si');
+    const planoNo = document.getElementById('plano_no');
+    const uploadPlano = document.getElementById('upload_plano');
+    const estanciasTexto = document.getElementById('estancias_texto');
+
+    if (planoSi && planoNo) {
+        planoSi.addEventListener('change', () => {
+            uploadPlano.style.display = 'block';
+            estanciasTexto.style.display = 'none';
+        });
+
+        planoNo.addEventListener('change', () => {
+            uploadPlano.style.display = 'none';
+            estanciasTexto.style.display = 'block';
+        });
+    }
+
+    // -------- SUBMIT --------
+    document.getElementById('form-reformas').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const data = {};
+
+        // convertir a objeto
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // checkboxes
+        const checkboxes = this.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            data[cb.name] = cb.checked;
+        });
+
+        try {
+            const response = await fetch('/.netlify/functions/calcular-reforma', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.style.display = 'block';
+
+            if (result.success) {
+                resultadoDiv.innerHTML = `
+                    <h3>¡Formulario enviado!</h3>
+                    <p><strong>Presupuesto aproximado:</strong> ${result.presupuesto} €</p>
+                    <p><strong>Cita:</strong> ${result.cita}</p>
+                `;
+            } else {
+                resultadoDiv.innerHTML = `<p style="color:red;">Error: ${result.error}</p>`;
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('resultado').innerHTML =
+                '<p style="color:red;">Error al procesar la solicitud.</p>';
+            document.getElementById('resultado').style.display = 'block';
+        }
+    });
+
 });
-
-const toggle = (radioYes, radioNo, div) => {
-
-radioYes.addEventListener('change', ()=> div.style.display="block")
-radioNo.addEventListener('change', ()=> div.style.display="none")
-
-}
-
-toggle(
-document.getElementById("suelo_si"),
-document.getElementById("suelo_no"),
-document.getElementById("detalle_suelo")
-)
-
-toggle(
-document.getElementById("carp_ext_si"),
-document.getElementById("carp_ext_no"),
-document.getElementById("detalle_carp_exterior")
-)
-
-toggle(
-document.getElementById("carp_int_si"),
-document.getElementById("carp_int_no"),
-document.getElementById("detalle_carp_interior")
-)
-
-toggle(
-document.getElementById("calef_si"),
-document.getElementById("calef_no"),
-document.getElementById("detalle_calefaccion")
-)
-
-document.getElementById("form-reformas").addEventListener("submit", async e=>{
-
-e.preventDefault()
-
-const formData = new FormData(e.target)
-
-const data = {}
-
-formData.forEach((v,k)=> data[k]=v)
-
-document.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-data[cb.name]=cb.checked
-})
-
-const res = await fetch("/.netlify/functions/calcular-reforma",{
-method:"POST",
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify(data)
-})
-
-const result = await res.json()
-
-const div = document.getElementById("resultado")
-
-if(result.success){
-
-div.innerHTML=`
-
-<h3>Presupuesto aproximado</h3>
-<p>${result.presupuesto} €</p>
-<p>${result.cita}</p>
-
-`
-
-}else{
-
-div.innerHTML=`<p>Error</p>`
-
-}
-
-})
-
-})

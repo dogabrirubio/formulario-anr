@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultadoDiv.innerHTML = '<p>Enviando...</p>';
 
         try {
-            const url = 'https://script.google.com/macros/s/AKfycbwRpWMNY3NJpJhDzhuiRfIR1CpLxdmiWH7pVoGbADRxuli_xqr2necKKLsFUsoyHACi/exec';  // ← Pega aquí tu URL actual si es diferente
+            const url = 'https://script.google.com/macros/s/AKfycbx2dZlZVtRkWtGTg3NYMlwnHEuy8QssI1A06B9KRqJGZY5e-q_ildA_FODtYA-2moSS/exec';
 
             const response = await fetch(url, {
                 method: 'POST',

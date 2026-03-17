@@ -54,54 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
             data[radio.name] = radio.value;
         });
 
-        // CÁLCULO DEL PRESUPUESTO
-        let presupuesto = 1000;
-
-        const m2 = parseFloat(data.m2) || 0;
-        const habitaciones = parseInt(data.habitaciones) || 0;
-        const banos = parseInt(data.banos) || 0;
-        const reforma_integral = data.reforma_integral === true || data.reforma_integral === "true";
-
-        presupuesto += 75 * m2;
-        presupuesto += 4200 * habitaciones;
-        presupuesto += 7400 * banos;
-
-        if (reforma_integral) presupuesto *= 1.2;
-
-        if (data.cambios_distribucion === true || data.cambios_distribucion === "true") presupuesto += 6692;
-        if (data.reforma_cocina === true || data.reforma_cocina === "true") {
-            presupuesto += 12000;
-            if (data.recuperar_cocina === true || data.recuperar_cocina === "true") presupuesto -= 12000 * 0.15;
-        }
-        if (data.reforma_banos_integral === true || data.reforma_banos_integral === "true") {
-            const extra = 100 * banos;
-            presupuesto += extra;
-            if (data.recuperar_banos === true || data.recuperar_banos === "true") presupuesto -= (banos * 7400 + extra) * 0.15;
-        }
-        if (data.renovacion_fontaneria === true || data.renovacion_fontaneria === "true") presupuesto += 6500;
-        if (data.cambiar_caldera === true || data.cambiar_caldera === "true") presupuesto += 2890;
-        if (data.renovacion_electricidad === true || data.renovacion_electricidad === "true") presupuesto += 4527;
-        if (data.aire_acondicionado === true || data.aire_acondicionado === "true") presupuesto += 1500;
-
-        presupuesto += (parseInt(data.cambios_carpinteria_exterior_cuantos) || 0) * 2750;
-
-        if (data.cambios_carpinteria_interior === true || data.cambios_carpinteria_interior === "true") {
-            presupuesto += (parseInt(data.cambios_carpinteria_interior_cuantos) || 0) * 875;
-        }
-
-        if (data.cambios_suelo === true || data.cambios_suelo === "true") {
-            if (data.tipo_solado === "tarima") presupuesto += m2 * 57;
-            if (data.tipo_solado === "ceramico") presupuesto += m2 * 75;
-        }
-
-        if (data.cambios_techo === true || data.cambios_techo === "true") presupuesto += 1500;
-        if (data.falso_techo === true || data.falso_techo === "true") presupuesto += 500;
-
-        const cita = "Cita agendada para 2026-02-15";
-
         const resultadoDiv = document.getElementById('resultado');
         resultadoDiv.style.display = 'block';
-        resultadoDiv.innerHTML = '<p>Enviando a Google Sheets...</p>';
+        resultadoDiv.innerHTML = '<p>Enviando datos...</p>';
 
         try {
             const response = await fetch('https://script.google.com/macros/s/AKfycbx2dZlZVtRkWtGTg3NYMlwnHEuy8QssI1A06B9KRqJGZY5e-q_ildA_FODtYA-2moSS/exec', {
@@ -111,23 +66,28 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const text = await response.text();
-            console.log("Respuesta raw:", text);
+            console.log("=== RESPUESTA RAW DEL SERVIDOR ===", text);
 
-            const result = JSON.parse(text);
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                result = { success: false, error: "El servidor no devolvió JSON válido: " + text };
+            }
 
             if (result.success) {
                 resultadoDiv.innerHTML = `
                     <h3>¡Formulario enviado correctamente!</h3>
-                    <p><strong>Presupuesto aproximado:</strong> ${presupuesto.toFixed(2)} €</p>
-                    <p><strong>Cita:</strong> ${cita}</p>
+                    <p><strong>Presupuesto aproximado:</strong> ${result.presupuesto} €</p>
+                    <p><strong>Cita:</strong> ${result.cita}</p>
                 `;
             } else {
                 resultadoDiv.innerHTML = `<p style="color:red;">Error: ${result.error || 'Error desconocido'}</p>`;
             }
 
         } catch (error) {
-            console.error("Error:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
+            console.error("Error completo:", error);
+            resultadoDiv.innerHTML = `<p style="color:red;">Error de conexión. Abre la consola (F12) y dime qué ves.</p>`;
         }
     });
 });

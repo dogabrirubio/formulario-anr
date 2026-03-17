@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculador de Reformas</title>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<link rel="stylesheet" href="/css/reformas-style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculador de Reformas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="/css/reformas-style.css">
 </head>
-
 <body>
 
 <form id="form-reformas">
     <h2>Formulario de Reformas</h2>
 
     <label>Fecha:</label>
-    <input type="date" name="fecha" required><br>
-
+    <input type="date" name="fecha" id="fecha-general" required><br>
+    
     <label>Nombre:</label>
     <input type="text" name="nombre" required><br>
-
+    
     <label>Dirección:</label>
     <textarea name="direccion" required></textarea><br>
-
+    
     <label>Teléfono:</label>
     <input type="tel" name="telefono" required><br>
-
+    
     <label>Email:</label>
     <input type="email" name="email" required><br>
-
+    
     <label>Disponibilidad para visita:</label>
     <textarea name="disponibilidad" required></textarea><br>
 
     <label>¿Es una reforma integral?</label>
     <input type="checkbox" name="reforma_integral"><br>
-
+    
     <label>¿Cuántos m² aproximados?</label>
     <input type="number" name="m2" required><br>
-
+    
     <label>¿Nº habitaciones?</label>
     <input type="number" name="habitaciones"><br>
-
+    
     <label>¿Nº baños?</label>
     <input type="number" name="banos"><br>
-
+    
     <label>¿En qué consiste la obra?</label>
     <textarea name="consiste_obra"></textarea><br>
-
+    
     <label>¿Dispuesto a invertir >50.000€?</label>
     <input type="checkbox" name="inversion_mayor"><br>
-
+    
     <label>¿Buscando calidad o precio?</label>
     <select name="calidad_precio">
         <option value="calidad">Calidad</option>
         <option value="precio">Precio</option>
     </select><br>
-
+    
     <label>¿Estilo en mente?</label>
     <textarea name="estilo"></textarea><br>
-
+    
     <label>¿Cuándo empezar la obra?</label>
     <input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
 
     <label>¿Hay ascensor?</label>
     <input type="checkbox" name="ascensor"><br>
-
+    
     <label>¿Dispone de plano?</label>
     <input type="radio" name="plano" value="si" id="plano_si"> Sí
     <input type="radio" name="plano" value="no" id="plano_no" checked> No<br>
-
+    
     <div id="upload_plano" style="display:none;">
         <label>Subir plano:</label>
         <input type="file" name="plano_file">
     </div>
-
+    
     <div id="estancias_texto" style="display:none;">
         <label>Enumerar estancias:</label>
         <textarea name="estancias"></textarea>
@@ -81,19 +79,19 @@
 
     <label>¿Cambios de distribución?</label>
     <input type="checkbox" name="cambios_distribucion"><br>
-
+    
     <label>¿Reforma integral cocina?</label>
     <input type="checkbox" name="reforma_cocina"><br>
-
+    
     <label>¿Recupera algo en cocina?</label>
     <input type="checkbox" name="recupera_cocina"><br>
-
+    
     <label>¿Reforma integral baños?</label>
     <input type="checkbox" name="reforma_banos_integral"><br>
-
+    
     <label>¿Recupera algo en baños?</label>
     <input type="checkbox" name="recupera_banos"><br>
-
+    
     <label>¿Renovación fontanería?</label>
     <input type="checkbox" name="renovacion_fontaneria"><br>
 
@@ -111,13 +109,13 @@
 
     <label>¿Renovación electricidad?</label>
     <input type="checkbox" name="renovacion_electricidad"><br>
-
+    
     <label>¿Instalación comunitaria?</label>
     <input type="checkbox" name="instalacion_comunitaria"><br>
-
+    
     <label>¿Aire acondicionado?</label>
     <input type="checkbox" name="aire_acondicionado"><br>
-
+    
     <label>Tipo de A/C:</label>
     <input type="text" name="tipo_ac"><br>
 
@@ -132,6 +130,7 @@
         <input type="number" name="cambios_carpinteria_exterior_cuantos"><br>
     </div>
 
+    <!-- CARPINTERÍA INTERIOR -->
     <div style="margin-top:1.5em;">
         <label>¿Cambios carpintería interior?</label><br>
         <input type="radio" name="cambios_carpinteria_interior" value="no" id="carp_int_no" checked> No<br>
@@ -161,16 +160,17 @@
 
     <label>¿Cambios techo?</label>
     <input type="checkbox" name="cambios_techo"><br>
-
+    
     <label>¿Falso techo?</label>
     <input type="checkbox" name="falso_techo"><br>
 
-    <button type="submit">Enviar y Calcular</button>
+    <button type="submit">Enviar</button>
 </form>
 
 <div id="resultado" style="display:none;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="/js/reformas-script.js"></script>
+
 </body>
 </html>

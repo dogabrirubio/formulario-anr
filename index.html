@@ -134,4 +134,48 @@
 
     <!-- Carpintería interior -->
     <div style="margin-top:1.5em;">
-        <label>¿Cambios carp
+        <label>¿Cambios carpintería interior?</label><br>
+        <input type="radio" name="cambios_carpinteria_interior" value="no" id="carp_int_no" checked> No<br>
+        <input type="radio" name="cambios_carpinteria_interior" value="si" id="carp_int_si"> Sí
+    </div>
+
+    <div id="detalle_carp_interior" style="display:none; margin-left:20px;">
+        <label>¿Cuántos elementos hay que cambiar?</label><br>
+        <input type="number" name="cambios_carpinteria_interior_cuantos"><br>
+    </div>
+
+    <div id="detalle_rodapie" style="display:none; margin-left:20px;">
+        <label>¿Instalar o cambiar rodapié?</label><br>
+        <input type="radio" name="rodapie" value="no" checked> No<br>
+        <input type="radio" name="rodapie" value="si"> Sí
+    </div>
+
+    <!-- Suelo -->
+    <div style="margin-top:1.5em;">
+        <label>¿Vas a cambiar el suelo?</label><br>
+        <input type="radio" name="cambios_suelo" value="no" id="suelo_no" checked> No<br>
+        <input type="radio" name="cambios_suelo" value="si" id="suelo_si"> Sí
+    </div>
+
+    <div id="detalle_suelo" style="display:none; margin-left:20px;">
+        <label>Tipo de suelo:</label><br>
+        <input type="radio" name="tipo_solado" value="tarima"> Tarima<br>
+        <input type="radio" name="tipo_solado" value="ceramico"> Cerámico
+    </div>
+
+    <label>¿Cambios techo?</label>
+    <input type="checkbox" name="cambios_techo"><br>
+    
+    <label>¿Falso techo?</label>
+    <input type="checkbox" name="falso_techo"><br>
+
+    <button type="submit">Enviar y Calcular</button>
+</form>
+
+<div id="resultado"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="js/reformas-script.js"></script>
+
+</body>
+</html>

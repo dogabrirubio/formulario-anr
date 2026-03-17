@@ -19,16 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleBlock("calef_si","calef_no","detalle_calefaccion");
     toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    // Rodapié depende de carpintería interior
-    const carpIntSi = document.getElementById("carp_int_si");
-    const carpIntNo = document.getElementById("carp_int_no");
-    const detalleRodapie = document.getElementById("detalle_rodapie");
-    if(carpIntSi && carpIntNo && detalleRodapie){
-        detalleRodapie.style.display = carpIntSi.checked ? "block" : "none";
-        carpIntSi.addEventListener("change", ()=> detalleRodapie.style.display = "block");
-        carpIntNo.addEventListener("change", ()=> detalleRodapie.style.display = "none");
-    }
-
     // Plano
     const planoSi = document.getElementById('plano_si');
     const planoNo = document.getElementById('plano_no');
@@ -50,11 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(cb=>data[cb.name]=cb.checked);
 
         try{
-    const response = await fetch('AQUI_TU_URL_DE_WEB_APP', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-});
+            const webAppUrl = "https://dogabrirubio.github.io/formulario-anr/";
+
+            const response = await fetch(webAppUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
             const result = await response.json();
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display='block';

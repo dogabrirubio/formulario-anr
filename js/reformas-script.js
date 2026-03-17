@@ -1,72 +1,94 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar Flatpickr en ambos campos
-    flatpickr("#fecha", {});
-    flatpickr("#calendario-inicio", {});
 
-    // Toggle: Plano
-    document.getElementById('plano_si').addEventListener('change', () => {
-        document.getElementById('upload_plano').style.display = 'block';
-        document.getElementById('estancias_texto').style.display = 'none';
-    });
-    document.getElementById('plano_no').addEventListener('change', () => {
-        document.getElementById('upload_plano').style.display = 'none';
-        document.getElementById('estancias_texto').style.display = 'block';
+    // -------- FLATPICKR --------
+    flatpickr("#calendario-inicio", {
+        enable: ["2026-02-10", "2026-02-15", "2026-02-20"],
+        dateFormat: "Y-m-d"
     });
 
-    // Toggle: Suelos
-    document.getElementById('suelo_si').addEventListener('change', () => {
-        document.getElementById('detalle_suelo').style.display = 'block';
-    });
-    document.getElementById('suelo_no').addEventListener('change', () => {
-        document.getElementById('detalle_suelo').style.display = 'none';
-    });
+    // -------- FUNCION TOGGLE GENERICA --------
+    function toggleBlock(siId, noId, divId) {
+        const si = document.getElementById(siId);
+        const no = document.getElementById(noId);
+        const div = document.getElementById(divId);
 
-    // Toggle: Calefacción
-    document.getElementById('calef_si').addEventListener('change', () => {
-        document.getElementById('detalle_calefaccion').style.display = 'block';
-    });
-    document.getElementById('calef_no').addEventListener('change', () => {
-        document.getElementById('detalle_calefaccion').style.display = 'none';
-    });
+        if (!si || !no || !div) return;
 
-    // Toggle: Carpintería exterior
-    document.getElementById('carp_ext_si').addEventListener('change', () => {
-        document.getElementById('detalle_carp_exterior').style.display = 'block';
-    });
-    document.getElementById('carp_ext_no').addEventListener('change', () => {
-        document.getElementById('detalle_carp_exterior').style.display = 'none';
-    });
+        // estado inicial (por si recarga)
+        if (si.checked) {
+            div.style.display = 'block';
+        } else {
+            div.style.display = 'none';
+        }
 
-    // Toggle: Carpintería interior + Rodapié
-    document.getElementById('carp_int_si').addEventListener('change', () => {
-        document.getElementById('detalle_carp_interior').style.display = 'block';
-        document.getElementById('rodapie_div').style.display = 'block';
-    });
-    document.getElementById('carp_int_no').addEventListener('change', () => {
-        document.getElementById('detalle_carp_interior').style.display = 'none';
-        document.getElementById('rodapie_div').style.display = 'none';
-    });
+        si.addEventListener('change', () => {
+            if (si.checked) div.style.display = 'block';
+        });
 
-    // Envío del formulario
+        no.addEventListener('change', () => {
+            if (no.checked) div.style.display = 'none';
+        });
+    }
+
+    // -------- TOGGLES --------
+
+    // 🔥 ESTE ES EL IMPORTANTE (rodapié depende de esto)
+    toggleBlock("carp_int_si", "carp_int_no", "detalle_carp_interior");
+
+    toggleBlock("carp_ext_si", "carp_ext_no", "detalle_carp_exterior");
+    toggleBlock("suelo_si", "suelo_no", "detalle_suelo");
+    toggleBlock("calef_si", "calef_no", "detalle_calefaccion");
+
+    // -------- PLANO --------
+    const planoSi = document.getElementById('plano_si');
+    const planoNo = document.getElementById('plano_no');
+    const uploadPlano = document.getElementById('upload_plano');
+    const estanciasTexto = document.getElementById('estancias_texto');
+
+    if (planoSi && planoNo) {
+        planoSi.addEventListener('change', () => {
+            uploadPlano.style.display = 'block';
+            estanciasTexto.style.display = 'none';
+        });
+
+        planoNo.addEventListener('change', () => {
+            uploadPlano.style.display = 'none';
+            estanciasTexto.style.display = 'block';
+        });
+    }
+
+    // -------- SUBMIT --------
     document.getElementById('form-reformas').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this);
         const data = {};
-        formData.forEach((value, key) => { data[key] = value; });
 
+        // convertir a objeto
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // checkboxes
         const checkboxes = this.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(cb => { data[cb.name] = cb.checked; });
+        checkboxes.forEach(cb => {
+            data[cb.name] = cb.checked;
+        });
 
         try {
             const response = await fetch('/.netlify/functions/calcular-reforma', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(data)
             });
+
             const result = await response.json();
+
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display = 'block';
+
             if (result.success) {
                 resultadoDiv.innerHTML = `
                     <h3>¡Formulario enviado!</h3>
@@ -76,11 +98,13 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 resultadoDiv.innerHTML = `<p style="color:red;">Error: ${result.error}</p>`;
             }
+
         } catch (error) {
             console.error('Error:', error);
-            const resultadoDiv = document.getElementById('resultado');
-            resultadoDiv.style.display = 'block';
-            resultadoDiv.innerHTML = '<p style="color:red;">Error al procesar la solicitud.</p>';
+            document.getElementById('resultado').innerHTML =
+                '<p style="color:red;">Error al procesar la solicitud.</p>';
+            document.getElementById('resultado').style.display = 'block';
         }
     });
+
 });

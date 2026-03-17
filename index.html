@@ -63,13 +63,12 @@
 <textarea name="estilo"></textarea><br>
 
 <label>¿Cuándo empezar la obra?</label>
-<input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
+<input type="date" name="fecha_inicio_obra" id="calendario-inicio" required><br>
 
 <label>¿Hay ascensor?</label>
 <input type="checkbox" name="ascensor"><br>
 
 <label>¿Dispone de plano?</label>
-
 <input type="radio" name="plano" value="si" id="plano_si"> Sí
 <input type="radio" name="plano" value="no" id="plano_no" checked> No<br>
 
@@ -142,9 +141,14 @@
 <input type="radio" name="cambios_carpinteria_interior" value="si" id="carp_int_si"> Sí
 </div>
 
+<!-- AQUI SOLO SE AÑADE ESTO -->
 <div id="detalle_carp_interior" style="display:none;">
 <label>¿Cuántos elementos?</label>
-<input type="number" name="cambios_carpinteria_interior_cuantos">
+<input type="number" name="cambios_carpinteria_interior_cuantos"><br><br>
+
+<label>¿Rodapié?</label><br>
+<input type="radio" name="rodapie" value="no" checked> No<br>
+<input type="radio" name="rodapie" value="si"> Sí
 </div>
 
 <div>
@@ -161,10 +165,10 @@
 <label>¿Cambios techo?</label>
 <input type="checkbox" name="cambios_techo"><br>
 
-<label>¿Incorporar falso techo?</label>
+<label>¿Falso techo?</label>
 <input type="checkbox" name="falso_techo"><br>
 
-<button type="submit">Enviar y Calcular</button>
+<button type="submit">Enviar</button>
 
 </form>
 

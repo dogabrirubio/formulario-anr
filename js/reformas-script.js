@@ -50,11 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(cb=>data[cb.name]=cb.checked);
 
         try{
-            const response = await fetch('/.netlify/functions/calcular-reforma',{
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify(data)
-            });
+    const response = await fetch('AQUI_TU_URL_DE_WEB_APP', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+});
             const result = await response.json();
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display='block';

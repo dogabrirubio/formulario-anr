@@ -1,79 +1,177 @@
-document.addEventListener('DOMContentLoaded', () => {
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-flatpickr("#calendario-inicio", {
-enable: ["2026-02-10","2026-02-15","2026-02-20"],
-dateFormat: "Y-m-d"
-});
+<title>Calculador de Reformas</title>
 
-const toggle = (radioYes, radioNo, div) => {
-radioYes.addEventListener('change', ()=> div.style.display="block")
-radioNo.addEventListener('change', ()=> div.style.display="none")
-}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="/css/reformas-style.css">
 
-toggle(
-document.getElementById("suelo_si"),
-document.getElementById("suelo_no"),
-document.getElementById("detalle_suelo")
-)
+</head>
 
-toggle(
-document.getElementById("carp_ext_si"),
-document.getElementById("carp_ext_no"),
-document.getElementById("detalle_carp_exterior")
-)
+<body>
 
-toggle(
-document.getElementById("carp_int_si"),
-document.getElementById("carp_int_no"),
-document.getElementById("detalle_carp_interior")
-)
+<form id="form-reformas">
 
-toggle(
-document.getElementById("calef_si"),
-document.getElementById("calef_no"),
-document.getElementById("detalle_calefaccion")
-)
+<h2>Formulario de Reformas</h2>
 
-document.getElementById("form-reformas").addEventListener("submit", async e=>{
+<label>Fecha:</label>
+<input type="date" name="fecha" required><br>
 
-e.preventDefault()
+<label>Nombre:</label>
+<input type="text" name="nombre" required><br>
 
-const formData = new FormData(e.target)
+<label>Dirección:</label>
+<textarea name="direccion" required></textarea><br>
 
-const data = {}
+<label>Teléfono:</label>
+<input type="tel" name="telefono" required><br>
 
-formData.forEach((v,k)=> data[k]=v)
+<label>Email:</label>
+<input type="email" name="email" required><br>
 
-document.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-data[cb.name]=cb.checked
-})
+<label>Disponibilidad para visita:</label>
+<textarea name="disponibilidad" required></textarea><br>
 
-const res = await fetch("/.netlify/functions/calcular-reforma",{
-method:"POST",
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify(data)
-})
+<label>¿Es una reforma integral?</label>
+<input type="checkbox" name="reforma_integral"><br>
 
-const result = await res.json()
+<label>¿Cuántos m² aproximados?</label>
+<input type="number" name="m2" required><br>
 
-const div = document.getElementById("resultado")
+<label>¿Nº habitaciones?</label>
+<input type="number" name="habitaciones"><br>
 
-if(result.success){
+<label>¿Nº baños?</label>
+<input type="number" name="banos"><br>
 
-div.innerHTML=`
+<label>¿En qué consiste la obra?</label>
+<textarea name="consiste_obra"></textarea><br>
 
-<h3>Presupuesto aproximado</h3>
-<p>${result.presupuesto} €</p>
-<p>${result.cita}</p>
+<label>¿Dispuesto a invertir >50.000€?</label>
+<input type="checkbox" name="inversion_mayor"><br>
 
-`
+<label>¿Buscando calidad o precio?</label>
+<select name="calidad_precio">
+<option value="calidad">Calidad</option>
+<option value="precio">Precio</option>
+</select><br>
 
-}else{
+<label>¿Estilo en mente?</label>
+<textarea name="estilo"></textarea><br>
 
-div.innerHTML=`<p>Error</p>`
+<label>¿Cuándo empezar la obra?</label>
+<input type="text" name="fecha_inicio_obra" id="calendario-inicio" required><br>
 
-}
+<label>¿Hay ascensor?</label>
+<input type="checkbox" name="ascensor"><br>
 
-})
+<label>¿Dispone de plano?</label>
 
-})
+<input type="radio" name="plano" value="si" id="plano_si"> Sí
+<input type="radio" name="plano" value="no" id="plano_no" checked> No<br>
+
+<div id="upload_plano" style="display:none;">
+<label>Subir plano:</label>
+<input type="file" name="plano_file">
+</div>
+
+<div id="estancias_texto" style="display:none;">
+<label>Enumerar estancias:</label>
+<textarea name="estancias"></textarea>
+</div>
+
+<label>¿Cambios de distribución?</label>
+<input type="checkbox" name="cambios_distribucion"><br>
+
+<label>¿Reforma integral cocina?</label>
+<input type="checkbox" name="reforma_cocina"><br>
+
+<label>¿Recupera algo en cocina?</label>
+<input type="checkbox" name="recupera_cocina"><br>
+
+<label>¿Reforma integral baños?</label>
+<input type="checkbox" name="reforma_banos_integral"><br>
+
+<label>¿Recupera algo en baños?</label>
+<input type="checkbox" name="recupera_banos"><br>
+
+<label>¿Renovación fontanería?</label>
+<input type="checkbox" name="renovacion_fontaneria"><br>
+
+<div>
+<label>¿Renovación calefacción?</label>
+<input type="radio" name="renovacion_calefaccion" value="no" id="calef_no" checked> No
+<input type="radio" name="renovacion_calefaccion" value="si" id="calef_si"> Sí
+</div>
+
+<div id="detalle_calefaccion" style="display:none;">
+<label>¿Cambiar caldera?</label>
+<input type="radio" name="cambiar_caldera" value="no" checked> No
+<input type="radio" name="cambiar_caldera" value="si"> Sí
+</div>
+
+<label>¿Renovación electricidad?</label>
+<input type="checkbox" name="renovacion_electricidad"><br>
+
+<label>¿Instalación comunitaria?</label>
+<input type="checkbox" name="instalacion_comunitaria"><br>
+
+<label>¿Aire acondicionado?</label>
+<input type="checkbox" name="aire_acondicionado"><br>
+
+<label>Tipo de A/C:</label>
+<input type="text" name="tipo_ac"><br>
+
+<div>
+<label>¿Cambios carpintería exterior?</label>
+<input type="radio" name="cambios_carpinteria_exterior" value="no" id="carp_ext_no" checked> No
+<input type="radio" name="cambios_carpinteria_exterior" value="si" id="carp_ext_si"> Sí
+</div>
+
+<div id="detalle_carp_exterior" style="display:none;">
+<label>¿Cuántos elementos?</label>
+<input type="number" name="cambios_carpinteria_exterior_cuantos">
+</div>
+
+<div>
+<label>¿Cambios carpintería interior?</label>
+<input type="radio" name="cambios_carpinteria_interior" value="no" id="carp_int_no" checked> No
+<input type="radio" name="cambios_carpinteria_interior" value="si" id="carp_int_si"> Sí
+</div>
+
+<div id="detalle_carp_interior" style="display:none;">
+<label>¿Cuántos elementos?</label>
+<input type="number" name="cambios_carpinteria_interior_cuantos">
+</div>
+
+<div>
+<label>¿Vas a cambiar el suelo?</label>
+<input type="radio" name="cambios_suelo" value="no" id="suelo_no" checked> No
+<input type="radio" name="cambios_suelo" value="si" id="suelo_si"> Sí
+</div>
+
+<div id="detalle_suelo" style="display:none;">
+<input type="radio" name="tipo_solado" value="tarima"> Tarima
+<input type="radio" name="tipo_solado" value="ceramico"> Cerámico
+</div>
+
+<label>¿Cambios techo?</label>
+<input type="checkbox" name="cambios_techo"><br>
+
+<label>¿Incorporar falso techo?</label>
+<input type="checkbox" name="falso_techo"><br>
+
+<button type="submit">Enviar y Calcular</button>
+
+</form>
+
+<div id="resultado"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/js/reformas-script.js"></script>
+
+</body>
+</html>

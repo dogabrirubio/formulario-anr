@@ -47,13 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(cb => data[cb.name] = cb.checked);
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwqPI9Pyo56EsdiLSntxUwNVKYj_2XR-k2F0mVBhiWHUXio3uu703T2Xrg-_mNvNbue/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxyyaOTFXUa1Stl-_OBVLI7oveSZ3yjRSy3XRntuLKUWB1_JY2i8d4Y84eSwMkaz5XJ/exec', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+});
 
-            const result = await response.json();
+const text = await response.text();
+console.log("RESPUESTA RAW:", text);
+
+const result = JSON.parse(text);
 
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display = 'block';

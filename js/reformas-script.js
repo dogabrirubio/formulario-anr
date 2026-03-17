@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
+        // Cálculo del presupuesto
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -117,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Mira la consola (F12).</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12) y copia todo.</p>`;
         }
     });
 });

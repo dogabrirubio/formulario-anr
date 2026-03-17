@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
         resultadoDiv.innerHTML = '<p>Enviando a Google Sheets...</p>';
 
         try {
-            // ←←← AQUÍ PEGA TU URL ACTUAL DEL APPS SCRIPT ←←←
             const response = await fetch('https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

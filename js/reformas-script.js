@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(cb => data[cb.name] = cb.checked);
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbxyyaOTFXUa1Stl-_OBVLI7oveSZ3yjRSy3XRntuLKUWB1_JY2i8d4Y84eSwMkaz5XJ/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzrGV_j-adxfotub4bwJNFveFSp01BypuDbLaZLC8-jWCpGxZ52YVrcCSSKCeq0PUU5/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)

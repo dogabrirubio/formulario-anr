@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // -------- CALENDARIO --------
     flatpickr("#calendario-inicio", { dateFormat: "Y-m-d" });
 
-    // -------- FUNCION TOGGLE GENERICA --------
     function toggleBlock(siId, noId, divId) {
         const si = document.getElementById(siId);
         const no = document.getElementById(noId);
@@ -14,13 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
         no.addEventListener('change', () => div.style.display = 'none');
     }
 
-    // -------- TOGGLES --------
     toggleBlock("carp_ext_si","carp_ext_no","detalle_carp_exterior");
     toggleBlock("suelo_si","suelo_no","detalle_suelo");
     toggleBlock("calef_si","calef_no","detalle_calefaccion");
     toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    // -------- PLANO --------
     const planoSi = document.getElementById('plano_si');
     const planoNo = document.getElementById('plano_no');
     const uploadPlano = document.getElementById('upload_plano');
@@ -37,30 +33,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // -------- SUBMIT FORMULARIO --------
     document.getElementById('form-reformas').addEventListener('submit', async function(e){
         e.preventDefault();
 
         const formData = new FormData(this);
         const data = {};
 
-        // Convertir FormData a objeto
         formData.forEach((value, key) => {
             data[key] = value;
         });
 
-        // Añadir valores de checkboxes
         const checkboxes = this.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(cb => data[cb.name] = cb.checked);
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbxyyaOTFXUa1Stl-_OBVLI7oveSZ3yjRSy3XRntuLKUWB1_JY2i8d4Y84eSwMkaz5XJ/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwqPI9Pyo56EsdiLSntxUwNVKYj_2XR-k2F0mVBhiWHUXio3uu703T2Xrg-_mNvNbue/exec', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             const result = await response.json();
+
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display = 'block';
 
@@ -76,11 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch(error){
             console.error(error);
-            const resultadoDiv = document.getElementById('resultado');
-            resultadoDiv.style.display = 'block';
-            resultadoDiv.innerHTML = '<p style="color:red;">Error al procesar la solicitud.</p>';
+            document.getElementById('resultado').innerHTML =
+                '<p style="color:red;">Error al procesar la solicitud.</p>';
         }
-
     });
 
 });

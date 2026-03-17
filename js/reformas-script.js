@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         resultadoDiv.innerHTML = '<p>Enviando a Google Sheets...</p>';
 
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbzjX7WCLfDvGv_3SFmCwNOY8K1W25IqZYRSw05MWB6Wr3GlUFUdc65_Om9OUL_6vOBN/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbyF7ONzvqC0HnXU7oBjNSRoBh3qNM9-FS6NmEyPEtoxA32jXLZod9DFyxf8gvKDpwb8/exec', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             const text = await response.text();
-            console.log("Respuesta raw:", text);
+            console.log("Respuesta raw de Google:", text);
 
             const result = JSON.parse(text);
 

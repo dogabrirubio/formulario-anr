@@ -97,11 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const params = new URLSearchParams(data);
-            const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(
-                'https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString()
-            );
+            const url = 'https://formulario-anr.eduardogabri-rubio.workers.dev?' + params.toString();
 
-            const response = await fetch(proxyUrl);
+            const response = await fetch(url);
             const text = await response.text();
             console.log("Respuesta raw:", text);
 
@@ -119,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12) y copia todo lo que aparece.</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
         }
     });
 });

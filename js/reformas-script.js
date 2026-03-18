@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    document.getElementById('form-reformas').addEventListener('submit', async function(e){
+    document.getElementById('form-reformas').addEventListener('submit', function(e){
         e.preventDefault();
 
         const formData = new FormData(this);
@@ -93,31 +93,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const resultadoDiv = document.getElementById('resultado');
         resultadoDiv.style.display = 'block';
-        resultadoDiv.innerHTML = '<p>Enviando...</p>';
+        resultadoDiv.innerHTML = `
+            <h3>¡Formulario procesado!</h3>
+            <p><strong>Presupuesto aproximado:</strong> ${presupuesto.toFixed(2)} €</p>
+            <p><strong>Cita:</strong> ${cita}</p>
+            <button id="btn-copiar" style="margin-top:10px;">Copiar respuestas (para hoja de cálculo)</button>
+        `;
 
-        try {
-            const params = new URLSearchParams(data);
-            const url = 'https://formulario-anr.eduardogabri-rubio.workers.dev?' + params.toString();
-
-            const response = await fetch(url);
-            const text = await response.text();
-            console.log("Respuesta raw:", text);
-
-            const result = JSON.parse(text);
-
-            if (result.success) {
-                resultadoDiv.innerHTML = `
-                    <h3>¡Formulario enviado correctamente!</h3>
-                    <p><strong>Presupuesto aproximado:</strong> ${presupuesto.toFixed(2)} €</p>
-                    <p><strong>Cita:</strong> ${cita}</p>
-                `;
-            } else {
-                resultadoDiv.innerHTML = `<p style="color:red;">Error: ${result.error || 'Error desconocido'}</p>`;
+        // Botón Copiar
+        document.getElementById('btn-copiar').addEventListener('click', function() {
+            let texto = "";
+            for (let key in data) {
+                texto += `${key}: ${data[key]}\n`;
             }
-
-        } catch (error) {
-            console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
-        }
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("¡Respuestas copiadas al portapapeles!\n\nPégalas en tu hoja de cálculo.");
+            });
+        });
     });
 });

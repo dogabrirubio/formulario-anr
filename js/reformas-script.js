@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
+        // Cálculo del presupuesto
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -97,17 +98,41 @@ document.addEventListener('DOMContentLoaded', function() {
             <h3>¡Formulario procesado!</h3>
             <p><strong>Presupuesto aproximado:</strong> ${presupuesto.toFixed(2)} €</p>
             <p><strong>Cita:</strong> ${cita}</p>
-            <button id="btn-copiar" style="margin-top:10px;">Copiar respuestas (para hoja de cálculo)</button>
+            <br>
+            <button id="btn-hoja" style="background:#2196F3; color:white; padding:10px 15px;">Copiar para hoja de cálculo</button>
+            <button id="btn-completo" style="background:#4CAF50; color:white; padding:10px 15px; margin-left:10px;">Copiar formulario completo</button>
         `;
 
-        // Botón Copiar
-        document.getElementById('btn-copiar').addEventListener('click', function() {
+        // Botón 1: Copiar solo valores en orden (para hoja de cálculo)
+        document.getElementById('btn-hoja').addEventListener('click', () => {
+            const orden = [
+                data.fecha, data.nombre, data.direccion, data.telefono, data.email, 
+                data.disponibilidad, data.reforma_integral, data.m2, data.habitaciones, 
+                data.banos, data.consiste_obra, data.inversion_mayor, data.calidad_precio, 
+                data.estilo, data.fecha_inicio_obra, data.ascensor, data.plano, 
+                data.cambios_distribucion, data.reforma_cocina, data.recuperar_cocina, 
+                data.reforma_banos_integral, data.recuperar_banos, data.renovacion_fontaneria, 
+                data.renovacion_calefaccion, data.cambiar_caldera, data.renovacion_electricidad, 
+                data.instalacion_comunitaria, data.aire_acondicionado, data.tipo_ac, 
+                data.cambios_carpinteria_exterior, data.cambios_carpinteria_exterior_cuantos, 
+                data.cambios_carpinteria_interior, data.cambios_carpinteria_interior_cuantos, 
+                data.cambios_suelo, data.tipo_solado, data.cambios_techo, data.falso_techo
+            ];
+
+            const texto = orden.join('\t');   // ← tabulador (mejor que coma para Excel)
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("✅ Copiado en orden para hoja de cálculo.\nPégalo directamente en tu Excel/Google Sheets.");
+            });
+        });
+
+        // Botón 2: Copiar formulario completo (como antes)
+        document.getElementById('btn-completo').addEventListener('click', () => {
             let texto = "";
             for (let key in data) {
                 texto += `${key}: ${data[key]}\n`;
             }
             navigator.clipboard.writeText(texto).then(() => {
-                alert("¡Respuestas copiadas al portapapeles!\n\nPégalas en tu hoja de cálculo.");
+                alert("✅ Formulario completo copiado.");
             });
         });
     });

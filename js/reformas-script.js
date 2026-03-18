@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleBlock("calef_si","calef_no","detalle_calefaccion");
     toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    // ←←← ELIMINADO TODO LO DEL PLANO (upload + estancias) ←←←
-    // Ya no hay listeners ni variables de plano_si / plano_no
 
     document.getElementById('form-reformas').addEventListener('submit', function(e){
         e.preventDefault();
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
-        // Cálculo del presupuesto (sin tocar nada)
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -89,15 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
             <button id="btn-completo" style="background:#4CAF50; color:white; padding:10px 15px; margin-left:10px;">Copiar formulario completo</button>
         `;
 
-        // ────────────────────────────────────────────────
-        // BOTÓN 1: Solo valores para hoja de cálculo (CSV)
-        // true/false → Sí/No   |   campo vacío → No   |   cantidades vacías → Ninguno
-        // ────────────────────────────────────────────────
         document.getElementById('btn-hoja').addEventListener('click', () => {
             const getSiNo = (value) => {
                 const v = String(value || '').toLowerCase().trim();
                 if (v === 'true' || v === 'si' || v === 'sí' || v === 'yes' || v === '1') return "Sí";
-                return "No";   // false, "", "no", undefined, null, "false" → No
+                return "No"; 
             };
 
             const getCantidad = (value) => {
@@ -123,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.estilo || '',
                 data.fecha_inicio_obra || '',
                 getSiNo(data.ascensor),
-                // ←←← plano eliminado aquí también ←←←
                 getSiNo(data.cambios_distribucion),
                 getSiNo(data.reforma_cocina),
                 getSiNo(data.recuperar_cocina),
@@ -155,9 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }).catch(() => alert("No se pudo copiar"));
         });
 
-        // ────────────────────────────────────────────────
-        // BOTÓN 2: Formulario completo (sin cambios)
-        // ────────────────────────────────────────────────
         document.getElementById('btn-completo').addEventListener('click', () => {
             let texto = "";
             for (let key in data) {

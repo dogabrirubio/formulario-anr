@@ -19,22 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleBlock("calef_si","calef_no","detalle_calefaccion");
     toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    const planoSi = document.getElementById('plano_si');
-    const planoNo = document.getElementById('plano_no');
-    const uploadPlano = document.getElementById('upload_plano');
-    const estanciasTexto = document.getElementById('estancias_texto');
-
-    if(planoSi && planoNo){
-        planoSi.addEventListener('change', () => {
-            uploadPlano.style.display = 'block';
-            estanciasTexto.style.display = 'none';
-        });
-
-        planoNo.addEventListener('change', () => {
-            uploadPlano.style.display = 'none';
-            estanciasTexto.style.display = 'block';
-        });
-    }
+    // ←←← ELIMINADO TODO LO DEL PLANO (upload + estancias) ←←←
+    // Ya no hay listeners ni variables de plano_si / plano_no
 
     document.getElementById('form-reformas').addEventListener('submit', function(e){
         e.preventDefault();
@@ -47,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
+        // Cálculo del presupuesto (sin tocar nada)
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -102,10 +89,15 @@ document.addEventListener('DOMContentLoaded', function() {
             <button id="btn-completo" style="background:#4CAF50; color:white; padding:10px 15px; margin-left:10px;">Copiar formulario completo</button>
         `;
 
+        // ────────────────────────────────────────────────
+        // BOTÓN 1: Solo valores para hoja de cálculo (CSV)
+        // true/false → Sí/No   |   campo vacío → No   |   cantidades vacías → Ninguno
+        // ────────────────────────────────────────────────
         document.getElementById('btn-hoja').addEventListener('click', () => {
             const getSiNo = (value) => {
-                if (value === true || value === "true" || value === "Sí") return "Sí";
-                return "No"; 
+                const v = String(value || '').toLowerCase().trim();
+                if (v === 'true' || v === 'si' || v === 'sí' || v === 'yes' || v === '1') return "Sí";
+                return "No";   // false, "", "no", undefined, null, "false" → No
             };
 
             const getCantidad = (value) => {
@@ -131,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.estilo || '',
                 data.fecha_inicio_obra || '',
                 getSiNo(data.ascensor),
-                data.plano || 'No',
+                // ←←← plano eliminado aquí también ←←←
                 getSiNo(data.cambios_distribucion),
                 getSiNo(data.reforma_cocina),
                 getSiNo(data.recuperar_cocina),
@@ -159,28 +151,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 .join(',');
 
             navigator.clipboard.writeText(texto).then(() => {
-                alert("✅ Copiado en formato CSV (solo valores, separados por coma).\nPégalo en una fila de Excel o Google Sheets.\n(Sí/No, Ninguno en cantidades vacías)");
-            }).catch(() => {
-                alert("No se pudo copiar al portapapeles.");
-            });
+                alert("✅ Copiado para hoja de cálculo (CSV).\n\n• Sí/No en lugar de true/false\n• Campos sin contestar → No\n• Cantidades vacías → Ninguno");
+            }).catch(() => alert("No se pudo copiar"));
         });
 
+        // ────────────────────────────────────────────────
+        // BOTÓN 2: Formulario completo (sin cambios)
+        // ────────────────────────────────────────────────
         document.getElementById('btn-completo').addEventListener('click', () => {
             let texto = "";
             for (let key in data) {
                 let valor = data[key];
-                if (typeof valor === 'boolean') {
-                    valor = valor ? 'Sí' : 'No';
-                } else if (valor === '' || valor === undefined || valor === null) {
-                    valor = '';
-                }
+                if (typeof valor === 'boolean') valor = valor ? 'Sí' : 'No';
                 texto += `${key}: ${valor}\n`;
             }
             navigator.clipboard.writeText(texto).then(() => {
-                alert("✅ Formulario completo copiado (clave: valor).");
-            }).catch(() => {
-                alert("No se pudo copiar al portapapeles.");
-            });
+                alert("✅ Formulario completo copiado.");
+            }).catch(() => alert("No se pudo copiar"));
         });
     });
 });

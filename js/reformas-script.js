@@ -97,9 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const params = new URLSearchParams(data);
-            const url = 'https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString();
+            const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(
+                'https://script.google.com/macros/s/AKfycbya1alTIYtoxiOhmYeTEVu9BZsqIxpErpvnHgTimaxk6DXlgphjZGP5IFI2A0zsk_Rq/exec?' + params.toString()
+            );
 
-            const response = await fetch(url);
+            const response = await fetch(proxyUrl);
             const text = await response.text();
             console.log("Respuesta raw:", text);
 

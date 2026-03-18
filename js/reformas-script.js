@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
         no.addEventListener('change', () => div.style.display = 'none');
     }
 
-    toggleBlock("carp_ext_si", "carp_ext_no", "detalle_carp_exterior");
-    toggleBlock("suelo_si", "suelo_no", "detalle_suelo");
-    toggleBlock("calef_si", "calef_no", "detalle_calefaccion");
-    toggleBlock("carp_int_si", "carp_int_no", "detalle_carp_interior");
+    toggleBlock("carp_ext_si","carp_ext_no","detalle_carp_exterior");
+    toggleBlock("suelo_si","suelo_no","detalle_suelo");
+    toggleBlock("calef_si","calef_no","detalle_calefaccion");
+    toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
 
-    document.getElementById('form-reformas').addEventListener('submit', function(e) {
+    document.getElementById('form-reformas').addEventListener('submit', function(e){
         e.preventDefault();
 
         const formData = new FormData(this);
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
         this.querySelectorAll('input[type="checkbox"]').forEach(cb => data[cb.name] = cb.checked);
         this.querySelectorAll('input[type="radio"]:checked').forEach(radio => data[radio.name] = radio.value);
 
-        // Cálculo del presupuesto
         let presupuesto = 1000;
 
         const m2 = parseFloat(data.m2) || 0;
@@ -141,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const texto = orden.join(',');
 
             navigator.clipboard.writeText(texto).then(() => {
-                alert("✅ Copiado para hoja de cálculo (solo valores, separados por coma).\nCampos vacíos → No o Ninguno según corresponda");
+                alert("Copiado sin comillas (separado por comas).\nPuedes pegarlo en una fila de Excel / Google Sheets.");
             }).catch(() => {
                 alert("No se pudo copiar al portapapeles.");
             });
@@ -157,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 texto += `${key}: ${valor || ''}\n`;
             }
             navigator.clipboard.writeText(texto).then(() => {
-                alert("✅ Formulario completo copiado (clave: valor).");
+                alert("Formulario completo copiado.");
             }).catch(() => {
                 alert("No se pudo copiar al portapapeles.");
             });

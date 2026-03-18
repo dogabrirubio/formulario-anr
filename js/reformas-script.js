@@ -1,25 +1,35 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    // Inicializar flatpickr
     flatpickr("#calendario-inicio", { dateFormat: "Y-m-d" });
 
+    // Función para mostrar/ocultar secciones
     function toggleBlock(siId, noId, divId) {
         const si = document.getElementById(siId);
         const no = document.getElementById(noId);
         const div = document.getElementById(divId);
-        if (!si || !no || !div) return;
 
+        if (!si || !no || !div) {
+            console.warn(`No se encontraron elementos: ${siId}, ${noId}, ${divId}`);
+            return;
+        }
+
+        // Estado inicial
         div.style.display = si.checked ? 'block' : 'none';
 
-        si.addEventListener('change', () => div.style.display = 'block');
-        no.addEventListener('change', () => div.style.display = 'none');
+        // Listeners
+        si.addEventListener('change', () => { div.style.display = 'block'; });
+        no.addEventListener('change', () => { div.style.display = 'none'; });
     }
 
-    toggleBlock("carp_ext_si","carp_ext_no","detalle_carp_exterior");
-    toggleBlock("suelo_si","suelo_no","detalle_suelo");
-    toggleBlock("calef_si","calef_no","detalle_calefaccion");
-    toggleBlock("carp_int_si","carp_int_no","detalle_carp_interior");
+    // Activar toggles
+    toggleBlock("carp_ext_si", "carp_ext_no", "detalle_carp_exterior");
+    toggleBlock("suelo_si", "suelo_no", "detalle_suelo");
+    toggleBlock("calef_si", "calef_no", "detalle_calefaccion");
+    toggleBlock("carp_int_si", "carp_int_no", "detalle_carp_interior");
 
-    document.getElementById('form-reformas').addEventListener('submit', function(e){
+    // Procesar formulario
+    document.getElementById('form-reformas').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const formData = new FormData(this);
@@ -85,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <button id="btn-completo" style="background:#4CAF50; color:white; padding:10px 15px; margin-left:10px;">Copiar formulario completo</button>
         `;
 
+        // Botón hoja de cálculo (con tabulador como antes)
         document.getElementById('btn-hoja').addEventListener('click', () => {
             const getSiNo = (value) => {
                 const v = String(value || '').toLowerCase().trim();
@@ -140,12 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const texto = orden.join('\t');
 
             navigator.clipboard.writeText(texto).then(() => {
-                alert("Copiado con tabulador (como funcionaba antes).\nPégalo en una fila de Excel o Google Sheets.");
+                alert("Copiado con tabulador.\nPégalo en una fila de Excel o Google Sheets.");
             }).catch(() => {
-                alert("No se pudo copiar al portapapeles.");
+                alert("No se pudo copiar.");
             });
         });
 
+        // Botón formulario completo
         document.getElementById('btn-completo').addEventListener('click', () => {
             let texto = "";
             for (let key in data) {
@@ -158,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.clipboard.writeText(texto).then(() => {
                 alert("Formulario completo copiado.");
             }).catch(() => {
-                alert("No se pudo copiar al portapapeles.");
+                alert("No se pudo copiar.");
             });
         });
     });

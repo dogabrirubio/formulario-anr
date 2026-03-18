@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error("Error completo:", error);
-            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12).</p>`;
+            resultadoDiv.innerHTML = `<p style="color:red;">Error al enviar. Revisa la consola (F12) y copia todo lo que aparece.</p>`;
         }
     });
 });
